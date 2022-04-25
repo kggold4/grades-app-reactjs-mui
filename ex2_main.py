@@ -3,9 +3,6 @@ import matplotlib.pyplot as plt
 import time
 
 
-def my_id() -> str:
-    return "208980359"
-
 
 def MSE(a: np.ndarray, b: np.ndarray) -> float:
     return np.square(a - b).mean()
@@ -156,7 +153,7 @@ def biliteralFilterDemo():
 
 
 def main():
-    print(my_id)
+    print(f"My ID is: {my_id}")
     conv1Demo()
     conv2Demo()
     derivDemo()
