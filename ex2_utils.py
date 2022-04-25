@@ -5,7 +5,9 @@ import math
 BASE_KERNEL_DERV = [[0, 0, 0], [-1, 0, 1], [0, 0, 0]]
 LAPLACIAN_KERNEL = np.array([[0, 1, 0], [1, -4, 1], [0, 1, 0]])
 KERNEL_5 = (5, 5)
+KERNEL_3 = (3, 3)
 IMAGE_PIXELS_SIZE = 255
+START_OF_STEPS = 50
 STEPS = 100
 SIZE_THRESH_RATIO = 0.47
 PI = np.pi
@@ -148,29 +150,54 @@ def houghCircle(img: np.ndarray, min_radius: int, max_radius: int) -> list:
     :return: A list containing the detected circles,
                 [(x,y,radius),(x,y,radius),...]
     """
-    edges = cv2.Canny((img * IMAGE_PIXELS_SIZE).astype(np.uint8), STEPS, 200) / IMAGE_PIXELS_SIZE
-    edges_points_arrays = np.where(edges > 0)
-    edges_points = list(zip(*edges_points_arrays))
-    votes = {}
-    for y, x in edges_points:
-        for r in range(min_radius, max_radius):
-            # for every theta
-            for step in range(STEPS):
-                theta = 360 * step / STEPS
-                a, b = int(x + r * np.cos(np.deg2rad(theta))), int(y + r * np.sin(np.deg2rad(theta)))
-                if a < img.shape[0] and b < img.shape[1]:
-                    if (a, b, r) in votes:
-                        votes[(a, b, r)] = votes.get((a, b, r)) + 1
-                    else:
-                        votes[(a, b, r)] = 1
-    max_centers = []
-    sorted_centers = sorted(
-        [filter(lambda k: votes[k] > STEPS * SIZE_THRESH_RATIO, votes)], key=lambda k: votes[k], reverse=True)
-    for center in sorted_centers:
-        a, b, r = center
-        if all((a - a_max) ** 2 + (b - b_max) ** 2 > r_max ** 2 for a_max, b_max, r_max in max_centers):
-            max_centers.append(center)
-    return max_centers
+    image_blurred_start = cv2.GaussianBlur(img, KERNEL_3, 0)
+    image_edges_start = cv2.Canny(image_blurred_start.astype(np.uint8), START_OF_STEPS, STEPS)
+    i = 5
+    while i < 21:
+        img_blurred = cv2.GaussianBlur(img, (i, i), 0)
+        img_edges = cv2.Canny(img_blurred.astype(np.uint8), START_OF_STEPS, STEPS)
+        image_edges_start = image_edges_start + img_edges
+        i += 2
+
+    img = image_edges_start
+    rows, cols = img.shape[0], img.shape[1]
+    edges, pts, results = [], [], []
+    circles = {}
+
+    r = min_radius
+    while r < max_radius + 1:
+        s = 0
+        while s < STEPS:
+            a = 2 * PI * s / STEPS
+            x, y = int(r * np.cos(a)), int(r * np.sin(a))
+            pts.append((x, y, r))
+            s += 1
+        r += 1
+
+    i = 0
+    while i < rows:
+        j = 0
+        while j < cols:
+            if img[i, j] == IMAGE_PIXELS_SIZE:
+                edges.append((i, j))
+            j += 1
+        i += 1
+
+    for e1, e2 in edges:
+        for d1, d2, r in pts:
+            a, b = e2 - d2, e1 - d1
+            c = circles.get((a, b, r))
+            if c is None:
+                circles[(a, b, r)] = 1
+            else:
+                circles[(a, b, r)] = c + 1
+
+    sorted_circles = sorted(circles.items(), key=lambda v: -v[1])
+    for circle, c in sorted_circles:
+        x, y, r = circle
+        if c / STEPS >= 0.4 and all((x - xc) * 2 + (y - yc) * 2 > rc ** 2 for xc, yc, rc in results):
+            results.append((x, y, r))
+    return results
 
 
 def bilateral_filter_implement(in_image: np.ndarray, k_size: int, sigma_color: float, sigma_space: float) -> (
@@ -186,8 +213,8 @@ def bilateral_filter_implement(in_image: np.ndarray, k_size: int, sigma_color: f
     shape = in_image.shape
     row, col = shape[0], shape[1]
     row_arr, col_arr = np.arange(0, row, 1).astype(int), np.arange(0, col, 1).astype(int)
-    pad = math.floor(k_size / 2)
-    padded_image = cv2.copyMakeBorder(in_image, pad, pad, pad, pad, cv2.BORDER_REPLICATE, None, value=0)
+    p = math.floor(k_size / 2)
+    padded_image = cv2.copyMakeBorder(in_image, p, p, p, p, cv2.BORDER_REPLICATE, None, value=0)
     image_new = np.zeros(shape)
     gaus = cv2.getGaussianKernel(k_size, k_size)
     gaus = gaus.dot(gaus.T)

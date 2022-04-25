@@ -3,7 +3,6 @@ import matplotlib.pyplot as plt
 import time
 
 
-
 def MSE(a: np.ndarray, b: np.ndarray) -> float:
     return np.square(a - b).mean()
 
