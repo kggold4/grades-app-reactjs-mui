@@ -2,15 +2,14 @@ import numpy as np
 import cv2
 import math
 
-BASE_KERNEL_DERV = [[0, 0, 0], [-1, 0, 1], [0, 0, 0]]
+BASE_KERNEL_DERV = np.array([[0, 0, 0], [-1, 0, 1], [0, 0, 0]])
+OP_BASE_KERNEL_DERV = np.array([[-1, 0, 1], [0, 0, 0], [1, 0, -1]])
 LAPLACIAN_KERNEL = np.array([[0, 1, 0], [1, -4, 1], [0, 1, 0]])
-KERNEL_5 = (5, 5)
-KERNEL_3 = (3, 3)
 IMAGE_PIXELS_SIZE = 255
-START_OF_STEPS = 50
 STEPS = 100
-SIZE_THRESH_RATIO = 0.47
-PI = np.pi
+STEPS_2 = 200
+CIRCLE_THRESH_RATIO = 0.46
+PI = math.pi
 
 
 def myID() -> np.int:
@@ -19,6 +18,42 @@ def myID() -> np.int:
     :return: int
     """
     return MY_ID
+
+
+# help functions
+def help_zero_crossing(in_image: np.ndarray) -> np.ndarray:
+    """
+    help zero crossing function on binary image
+    :param in_image: input image
+    :return:
+    """
+    negative = in_image < 0
+    positive = in_image >= 0
+    results = np.zeros_like(in_image)
+    for i in range(1, in_image.shape[0]):
+        for j in range(1, in_image.shape[1]):
+            case_negative_i = negative[i - 1, j] and positive[i, j]
+            case_positive_i = positive[i - 1, j] and negative[i, j]
+            case_negative_j = negative[i, j - 1] and positive[i, j]
+            case_positive_j = positive[i, j - 1] and negative[i, j]
+            if case_negative_i or case_positive_i or case_negative_j or case_positive_j:
+                results[i, j] = 1
+    return results
+
+
+def help_create_gaussian(k_size: int, sigma: float) -> np.ndarray:
+    mid = k_size // 2
+    kernel = np.zeros((k_size, k_size))
+    for i in range(k_size):
+        for j in range(k_size):
+            x = i - mid
+            y = j - mid
+            kernel[i, j] = np.exp(-(x ** 2 + y ** 2) / (2 * sigma ** 2)) / (2 * PI * sigma ** 2)
+    return kernel
+
+
+def help_gaussian(x, sigma):
+    return math.exp(- (x ** 2) / (2 * sigma ** 2)) * (1.0 / (2 * PI * (sigma ** 2)))
 
 
 def conv1D(in_signal: np.ndarray, k_size: np.ndarray) -> np.ndarray:
@@ -67,27 +102,12 @@ def convDerivative(in_image: np.ndarray) -> (np.ndarray, np.ndarray):
     :param in_image: Grayscale image
     :return: (directions, magnitude)
     """
-    kernel = np.array(BASE_KERNEL_DERV)
+    kernel = BASE_KERNEL_DERV
     transposed_kernel = kernel.transpose()
-    x_der, y_der = conv2D(in_image, kernel), conv2D(in_image, transposed_kernel)
-    directrions = np.arctan(y_der, x_der)
-    mangitude = np.sqrt(np.square(x_der) + np.square(y_der))
-    return directrions, mangitude
-
-
-def my_create_gaussian(k_size: int, sigma: float):
-    mid = k_size // 2
-    kernel = np.zeros((k_size, k_size))
-    i = 0
-    while i < k_size:
-        j = 0
-        while j < k_size:
-            x = i - mid
-            y = j - mid
-            kernel[i, j] = np.exp(-(x ** 2 + y ** 2) / (2 * sigma ** 2)) / (2 * PI * sigma ** 2)
-            j += 1
-        i += 1
-    return kernel
+    dx, dy = conv2D(in_image, kernel), conv2D(in_image, transposed_kernel)
+    directions = np.arctan(dy, dx)
+    magnitude = np.sqrt(np.square(dy) + np.square(dx))
+    return directions, magnitude
 
 
 def get_sigma_blur_image(k_size: int) -> float:
@@ -101,7 +121,7 @@ def blurImage1(in_image: np.ndarray, k_size: int) -> np.ndarray:
     :param k_size: Kernel size
     :return: The Blurred image
     """
-    return conv2D(in_image, my_create_gaussian(k_size=k_size, sigma=get_sigma_blur_image(k_size=k_size)))
+    return conv2D(in_image, help_create_gaussian(k_size=k_size, sigma=get_sigma_blur_image(k_size=k_size)))
 
 
 def blurImage2(in_image: np.ndarray, k_size: int) -> np.ndarray:
@@ -121,18 +141,8 @@ def edgeDetectionZeroCrossingSimple(img: np.ndarray) -> np.ndarray:
     :param img: Input image
     :return: Edge matrix
     """
-    img = conv2D(img, LAPLACIAN_KERNEL)
-    zero_crossing = np.zeros(img.shape)
-    for i in range(img.shape[0] - (LAPLACIAN_KERNEL.shape[0] - 1)):
-        for j in range(img.shape[1] - (LAPLACIAN_KERNEL.shape[1] - 1)):
-            if img[i][j] == 0:
-                if (img[i][j - 1] < 0 and img[i][j + 1] > 0) or (img[i][j - 1] < 0 and img[i][j + 1] < 0) or (
-                        img[i - 1][j] < 0 and img[i + 1][j] > 0) or (img[i - 1][j] > 0 and img[i + 1][j] < 0):
-                    zero_crossing[i][j] = IMAGE_PIXELS_SIZE
-            if img[i][j] < 0 and (img[i][j - 1] > 0) or (img[i][j + 1] > 0) or (img[i - 1][j] > 0) or (
-                    img[i + 1][j] > 0):
-                zero_crossing[i][j] = IMAGE_PIXELS_SIZE
-    return zero_crossing
+    img = conv2D(blurImage2(img, 5), OP_BASE_KERNEL_DERV)
+    return help_zero_crossing(img)
 
 
 def edgeDetectionZeroCrossingLOG(img: np.ndarray) -> np.ndarray:
@@ -144,8 +154,8 @@ def edgeDetectionZeroCrossingLOG(img: np.ndarray) -> np.ndarray:
     # blur = blurImage2(img, np.array([3, 3]))
     # blur = blurImage2(img, 3)
     # return edgeDetectionZeroCrossingSimple(blur)
-    img = cv2.GaussianBlur(img, KERNEL_5, 0)
-    return edgeDetectionZeroCrossingSimple(img)
+    img = conv2D(blurImage2(img, 11), LAPLACIAN_KERNEL)
+    return help_zero_crossing(img)
 
 
 def houghCircle(img: np.ndarray, min_radius: int, max_radius: int) -> list:
@@ -155,56 +165,38 @@ def houghCircle(img: np.ndarray, min_radius: int, max_radius: int) -> list:
     :param img: Input image
     :param min_radius: Minimum circle radius
     :param max_radius: Maximum circle radius
-    :return: A list containing the detected circles,
-                [(x,y,radius),(x,y,radius),...]
+    :return: A list containing the detected circles, [(x,y,radius),(x,y,radius),...]
     """
-    image_blurred_start = cv2.GaussianBlur(img, KERNEL_3, 0)
-    image_edges_start = cv2.Canny(image_blurred_start.astype(np.uint8), START_OF_STEPS, STEPS)
-    i = 5
-    while i < 21:
-        img_blurred = cv2.GaussianBlur(img, (i, i), 0)
-        img_edges = cv2.Canny(img_blurred.astype(np.uint8), START_OF_STEPS, STEPS)
-        image_edges_start = image_edges_start + img_edges
-        i += 2
+    out_image = (img * IMAGE_PIXELS_SIZE).astype(np.uint8)
+    canny_image = cv2.Canny(out_image, STEPS, STEPS_2)
+    rows, cols = canny_image.shape
+    edges, points, results, circles = [], [], [], {}
 
-    img = image_edges_start
-    rows, cols = img.shape[0], img.shape[1]
-    edges, pts, results = [], [], []
-    circles = {}
+    for radius in range(min_radius, max_radius + 1):
+        for step in range(STEPS):
+            x = int(np.cos(PI * (step / STEPS) * 2) * radius)
+            y = int(np.sin(PI * (step / STEPS) * 2) * radius)
+            points.append((x, y, radius))
 
-    r = min_radius
-    while r < max_radius + 1:
-        s = 0
-        while s < STEPS:
-            a = 2 * PI * s / STEPS
-            x, y = int(r * np.cos(a)), int(r * np.sin(a))
-            pts.append((x, y, r))
-            s += 1
-        r += 1
+    for x in range(rows):
+        for y in range(cols):
+            if canny_image[x, y] == IMAGE_PIXELS_SIZE:
+                edges.append((x, y))
 
-    i = 0
-    while i < rows:
-        j = 0
-        while j < cols:
-            if img[i, j] == IMAGE_PIXELS_SIZE:
-                edges.append((i, j))
-            j += 1
-        i += 1
-
-    for e1, e2 in edges:
-        for d1, d2, r in pts:
-            a, b = e2 - d2, e1 - d1
-            c = circles.get((a, b, r))
-            if c is None:
-                circles[(a, b, r)] = 1
+    for x1, y1 in edges:
+        for x2, y2, radius in points:
+            dx, dy = x1 - x2, y1 - y2
+            circle = circles.get((dy, dx, radius))
+            if circle is None:
+                circles[(dy, dx, radius)] = 1
             else:
-                circles[(a, b, r)] = c + 1
+                circles[(dy, dx, radius)] = circle + 1
 
-    sorted_circles = sorted(circles.items(), key=lambda v: -v[1])
-    for circle, c in sorted_circles:
-        x, y, r = circle
-        if c / STEPS >= 0.4 and all((x - xc) * 2 + (y - yc) * 2 > rc ** 2 for xc, yc, rc in results):
-            results.append((x, y, r))
+    for circle, count in sorted(circles.items(), key=lambda v: -v[1]):
+        nx, ny, radios = circle
+        if count / STEPS >= CIRCLE_THRESH_RATIO and all((nx - x) ** 2 + (ny - y) ** 2 > r ** 2 for x, y, r in results):
+            results.append((nx, ny, radios))
+
     return results
 
 
@@ -217,20 +209,30 @@ def bilateral_filter_implement(in_image: np.ndarray, k_size: int, sigma_color: f
     :param sigma_space: represents the filter sigma in the coordinate.
     :return: OpenCV implementation, my implementation
     """
-    cv_image = cv2.bilateralFilter(in_image, k_size, sigma_color, sigma_space)
-    shape = in_image.shape
-    row, col = shape[0], shape[1]
-    row_arr, col_arr = np.arange(0, row, 1).astype(int), np.arange(0, col, 1).astype(int)
-    p = math.floor(k_size / 2)
-    padded_image = cv2.copyMakeBorder(in_image, p, p, p, p, cv2.BORDER_REPLICATE, None, value=0)
-    image_new = np.zeros(shape)
-    gaus = cv2.getGaussianKernel(k_size, k_size)
-    gaus = gaus.dot(gaus.T)
-    for i in row_arr:
-        for j in col_arr:
-            neighbor_hood = padded_image[i:i + k_size, j:j + k_size]
-            diff_gau = np.exp(-np.power(in_image[i, j] - neighbor_hood, 2) / (2 * sigma_color))
-            combo = gaus * diff_gau
-            result = combo * neighbor_hood / combo.sum()
-            image_new[i][j] = result.sum()
-    return cv_image, image_new
+    out_image_open_cv = cv2.bilateralFilter(in_image, k_size, sigma_color, sigma_space)
+    out_image = np.zeros(in_image.shape)
+    x_len, y_len = len(in_image), len(in_image[0])
+    for x in range(x_len):
+        for y in range(y_len):
+            filtered_sum = 0
+            sum_of_gaussian = 0
+            for i in range(k_size):
+                for j in range(k_size):
+                    nx = int(x - ((k_size / 2) - i))
+                    ny = int(y - ((k_size / 2) - j))
+                    if nx >= x_len:
+                        nx = x_len - 1
+                    if nx < 0:
+                        nx = 0
+
+                    if ny >= y_len:
+                        ny = y_len - 1
+                    if ny < 0:
+                        ny = 0
+
+                    gaussian_1 = help_gaussian(int(in_image[nx][ny]) - int(in_image[x][y]), sigma_color)
+                    gaussian_2 = help_gaussian(np.sqrt((nx - x) ** 2 + (ny - y) ** 2), sigma_space)
+                    filtered_sum += in_image[nx][ny] * (gaussian_1 * gaussian_2)
+                    sum_of_gaussian += gaussian_1 * gaussian_2
+            out_image[x][y] = int(round(filtered_sum / sum_of_gaussian))
+    return out_image_open_cv, out_image
