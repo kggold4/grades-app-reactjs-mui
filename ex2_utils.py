@@ -56,6 +56,10 @@ def help_gaussian(x, sigma):
     return math.exp(- (x ** 2) / (2 * sigma ** 2)) * (1.0 / (2 * PI * (sigma ** 2)))
 
 
+def get_sigma_blur_image(k_size: int) -> float:
+    return 0.3 * ((k_size - 1) * 0.5 - 1) + 0.8
+
+
 def conv1D(in_signal: np.ndarray, k_size: np.ndarray) -> np.ndarray:
     """
     Convolve a 1-D array with a given kernel
@@ -108,10 +112,6 @@ def convDerivative(in_image: np.ndarray) -> (np.ndarray, np.ndarray):
     directions = np.arctan(dy, dx)
     magnitude = np.sqrt(np.square(dy) + np.square(dx))
     return directions, magnitude
-
-
-def get_sigma_blur_image(k_size: int) -> float:
-    return 0.3 * ((k_size - 1) * 0.5 - 1) + 0.8
 
 
 def blurImage1(in_image: np.ndarray, k_size: int) -> np.ndarray:
