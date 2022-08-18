@@ -6,25 +6,18 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-
-function loadGrades() {
-  let gradeItems = JSON.parse(localStorage.getItem('gradeItems'));
-  if((gradeItems != null) && (gradeItems.length > 0)) {
-    console.log("get: ", gradeItems);
-    return gradeItems;
-  } else {
-    return [];
-  }
-}
+import Button from "@mui/material/Button";
+import { getCurrentGradeList } from "./GradesUtils";
 
 export default function GradeList() {
-  const gradeItems = loadGrades();
+  const gradeItems = getCurrentGradeList();
 
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
-        <TableHead>
+        <TableHead> 
           <TableRow>
+            <TableCell></TableCell>
             <TableCell>Course Name</TableCell>
             <TableCell align="right">Grade</TableCell>
             <TableCell align="right">Credits</TableCell>
@@ -33,12 +26,11 @@ export default function GradeList() {
         <TableBody>
           {gradeItems.map((gradeItem) => (
             <TableRow
-              key={gradeItem.name}
+              key={gradeItem.id}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
-              <TableCell component="th" scope="row">
-                {gradeItem.name}
-              </TableCell>
+              <TableCell><Button>X</Button></TableCell>
+              <TableCell component="th" scope="row">{gradeItem.name}</TableCell>
               <TableCell align="right">{gradeItem.grade}</TableCell>
               <TableCell align="right">{gradeItem.credits}</TableCell>
             </TableRow>

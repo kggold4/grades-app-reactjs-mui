@@ -2,6 +2,7 @@ import * as React from 'react';
 import Inset from './Inset';
 import GradeList from './GradesList';
 import Header from './Header';
+import Summary from './Summary';
 import Footer from './Footer';
 import './App.css';
 
@@ -11,6 +12,7 @@ function App() {
       <Header />
       <Inset />
       <GradeList />
+      <Summary />
       <Footer />
     </div>
   );
