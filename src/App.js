@@ -1,13 +1,16 @@
-import './App.css';
+import * as React from 'react';
+import Inset from './Inset';
+import GradeList from './GradesList';
 import Header from './Header';
 import Footer from './Footer';
-import MainContent from './MainContent';
+import './App.css';
 
 function App() {
   return (
     <div className="App">
       <Header />
-      <MainContent />
+      <Inset />
+      <GradeList />
       <Footer />
     </div>
   );

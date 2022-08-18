@@ -1,4 +1,5 @@
-import { React, useState } from "react";
+import * as React from "react"
+import { useState } from "react";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
@@ -9,6 +10,8 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 const theme = createTheme();
+let gradeItems = [];
+let current_grade_id = 0;
 
 function add_grade(name, grade, credits) {
   console.log(
@@ -19,6 +22,59 @@ function add_grade(name, grade, credits) {
     ", credits: ",
     credits
   );
+  getCurrentGradeId();
+  getCurrentGradeList();
+  let gradeItem = new GradeItem(current_grade_id, name, grade, credits);
+  gradeItems.push(gradeItem);
+  setCurrentGradeItems();
+  setCurrentGradeId();
+  reloadGradeList();
+}
+
+function reloadGradeList() {
+  window.location.reload(false);
+}
+
+function getCurrentGradeList() {
+  let current_grades_list = JSON.parse(localStorage.getItem("gradeItems"));
+  if(current_grades_list != null) {
+    gradeItems = current_grades_list;
+  }
+}
+
+function getCurrentGradeId() {
+  current_grade_id = JSON.parse(localStorage.getItem("gradeID"));
+  console.log("get id: ", current_grade_id);
+  if(current_grade_id == null) {
+    current_grade_id = 0;
+  }
+}
+
+function setCurrentGradeId() {
+  localStorage.setItem("gradeID", JSON.stringify(current_grade_id));
+  console.log("save id: ", current_grade_id);
+}
+
+function setCurrentGradeItems() {
+  current_grade_id++;
+  localStorage.setItem("gradeItems", JSON.stringify(gradeItems));
+}
+
+function clearGradesItems() {
+  gradeItems = [];
+  localStorage.removeItem("gradeItems");
+  current_grade_id = 0;
+  setCurrentGradeId();
+  reloadGradeList();
+}
+
+class GradeItem {
+  constructor(id, name, grade, credits) {
+    this.id = id;
+    this.name = name;
+    this.grade = grade;
+    this.credits = credits;
+  }
 }
 
 export default function Inset() {
@@ -77,17 +133,32 @@ export default function Inset() {
                 />
               </Grid>
             </Grid>
+            <Grid container>
+              <Grid item xs={6}>
             <Button
               type="submit"
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
               onClick={() => {
-                add_grade(name, grade, credits);
+                add_grade(name, parseFloat(grade), parseFloat(credits));
               }}
             >
               Add
             </Button>
+            </Grid>
+            <Grid item xs={6}>
+            <Button
+            type="button"
+            fullWidth
+              variant="outlined"
+              sx={{ mt: 3, mb: 2 }}
+              onClick={() => {
+                clearGradesItems();
+              }}
+            >Clear</Button>
+            </Grid>
+            </Grid>
           </Box>
         </Box>
       </Container>
