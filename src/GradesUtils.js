@@ -17,7 +17,7 @@ function reloadGradeList() {
 
 export function getCurrentGradeList() {
   let current_grades_list = JSON.parse(localStorage.getItem("gradeItems"));
-  if(current_grades_list != null) {
+  if (current_grades_list != null) {
     gradeItems = current_grades_list;
   }
   console.log("current id: ", current_grade_id);
@@ -27,7 +27,7 @@ export function getCurrentGradeList() {
 
 function getCurrentGradeId() {
   current_grade_id = JSON.parse(localStorage.getItem("gradeID"));
-  if(current_grade_id == null) {
+  if (current_grade_id == null) {
     current_grade_id = 0;
   }
 }
@@ -47,6 +47,44 @@ export function clearGradesItems() {
   current_grade_id = 0;
   setCurrentGradeId();
   reloadGradeList();
+}
+
+export function getMinGrade() {
+  let minGrade = 100;
+  for (var i = 0; i < gradeItems.length; i++) {
+    if (gradeItems[i].grade < minGrade) {
+      minGrade = gradeItems[i].grade;
+    }
+  }
+  return minGrade;
+}
+
+export function getMaxGrade() {
+  let maxGrade = 0;
+  for (var i = 0; i < gradeItems.length; i++) {
+    if (gradeItems[i].grade > maxGrade) {
+      maxGrade = gradeItems[i].grade;
+    }
+  }
+  return maxGrade;
+}
+
+export function getSumCredits() {
+  let sumCredits = 0;
+  for (var i = 0; i < gradeItems.length; i++) {
+    sumCredits += gradeItems[i].credits;
+  }
+  return sumCredits;
+}
+
+export function getAverage() {
+  let sum = 0;
+  let creditCouter = 0;
+  for (var i = 0; i < gradeItems.length; i++) {
+    sum += gradeItems[i].grade * gradeItems[i].credits;
+    creditCouter += gradeItems[i].credits;
+  }
+  return sum / creditCouter;
 }
 
 class GradeItem {
