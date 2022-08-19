@@ -7,7 +7,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
-import { getCurrentGradeList } from "./GradesUtils";
+import { deleteGrade, getCurrentGradeList } from "./GradesUtils";
 import Title from "./Title";
 
 export default function GradeList() {
@@ -33,7 +33,13 @@ export default function GradeList() {
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
                 <TableCell>
-                  <Button>X</Button>
+                  <Button
+                    onClick={() => {
+                      deleteGrade(gradeItem.id);
+                    }}
+                  >
+                    X
+                  </Button>
                 </TableCell>
                 <TableCell component="th" scope="row">
                   {gradeItem.name}

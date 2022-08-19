@@ -1,5 +1,6 @@
 import * as React from "react";
 import Typography from "@mui/material/Typography";
+import Grid from "@mui/material/Grid";
 import Title from "./Title";
 
 import {
@@ -15,25 +16,31 @@ export default function Summary() {
   const sumCredits = getSumCredits();
   const average = getAverage();
 
-  console.log("minGrade: ", minGrade);
-  console.log("maxGrade: ", maxGrade);
-  console.log("sumCredits: ", sumCredits);
-  console.log("average: ", average);
   return (
     <React.Fragment>
       <Title>Summary</Title>
-      <Typography component="p" variant="h4">
-        Average: {average}
-      </Typography>
-      <Typography color="text.secondary" sx={{ flex: 1 }}>
-        sumCredits: {sumCredits}
-      </Typography>
-      <Typography color="text.secondary" sx={{ flex: 1 }}>
-        maxGrade: {maxGrade}
-      </Typography>
-      <Typography color="text.secondary" sx={{ flex: 1 }}>
-        average: {average}
-      </Typography>
+      <Grid container spacing={2}>
+        <Grid item xs={12} sm={6}>
+          <Typography component="p" variant="h6" paddingBottom={2.5}>
+            Average: {average}
+          </Typography>
+        </Grid>
+        <Grid item xs={3} sm={6}>
+          <Typography color="text.secondary">
+            Number of Credits: {sumCredits}
+          </Typography>
+        </Grid>
+        <Grid item xs={3} sm={6}>
+          <Typography color="text.secondary">
+            Highest Grade: {maxGrade}
+          </Typography>
+        </Grid>
+        <Grid item xs={3} sm={6}>
+          <Typography color="text.secondary">
+            Lowest Grade: {minGrade}
+          </Typography>
+        </Grid>
+      </Grid>
     </React.Fragment>
   );
 }

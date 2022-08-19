@@ -20,8 +20,6 @@ export function getCurrentGradeList() {
   if (current_grades_list != null) {
     gradeItems = current_grades_list;
   }
-  console.log("current id: ", current_grade_id);
-  console.table(gradeItems);
   return gradeItems;
 }
 
@@ -49,42 +47,74 @@ export function clearGradesItems() {
   reloadGradeList();
 }
 
+export function deleteGrade(id) {
+  getCurrentGradeList();
+  let index = 0;
+  for (var i = 0; i < gradeItems.length; i++) {
+    index++;
+    if (gradeItems[i].id === id) {
+      break;
+    }
+  }
+  gradeItems.splice(index - 1, 1);
+  setCurrentGradeItems();
+  reloadGradeList();
+}
+
 export function getMinGrade() {
+  getCurrentGradeList();
+  if (gradeItems.length === 0) {
+    return 0;
+  }
   let minGrade = 100;
   for (var i = 0; i < gradeItems.length; i++) {
     if (gradeItems[i].grade < minGrade) {
       minGrade = gradeItems[i].grade;
     }
   }
-  return minGrade;
+  return minGrade.toFixed(2);
 }
 
 export function getMaxGrade() {
+  getCurrentGradeList();
+  if (gradeItems.length === 0) {
+    return 0;
+  }
   let maxGrade = 0;
   for (var i = 0; i < gradeItems.length; i++) {
     if (gradeItems[i].grade > maxGrade) {
       maxGrade = gradeItems[i].grade;
     }
   }
-  return maxGrade;
+  return maxGrade.toFixed(2);
 }
 
 export function getSumCredits() {
+  getCurrentGradeList();
+  if (gradeItems.length === 0) {
+    return 0;
+  }
   let sumCredits = 0;
   for (var i = 0; i < gradeItems.length; i++) {
     sumCredits += gradeItems[i].credits;
   }
-  return sumCredits;
+  return sumCredits.toFixed(2);
 }
 
 export function getAverage() {
+  getCurrentGradeList();
+  if (gradeItems.length === 0) {
+    return 0;
+  }
   let sum = 0;
   let creditCouter = 0;
+  console.table(gradeItems);
   for (var i = 0; i < gradeItems.length; i++) {
+    console.log("grade: ", gradeItems[i].grade);
     sum += gradeItems[i].grade * gradeItems[i].credits;
     creditCouter += gradeItems[i].credits;
   }
-  return sum / creditCouter;
+  return (sum / creditCouter).toFixed(2);
 }
 
 class GradeItem {

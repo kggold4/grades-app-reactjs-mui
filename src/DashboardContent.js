@@ -50,6 +50,7 @@ export default function DashboardContent() {
                     display: "flex",
                     flexDirection: "column",
                     height: 300,
+                    padding: "20px",
                   }}
                 >
                   <Inset />
@@ -62,6 +63,8 @@ export default function DashboardContent() {
                     display: "flex",
                     flexDirection: "column",
                     height: 300,
+                    textAlign: "left",
+                    padding: "20px",
                   }}
                 >
                   <Summary />
@@ -74,6 +77,7 @@ export default function DashboardContent() {
                     display: "flex",
                     flexDirection: "column",
                     height: 400,
+                    padding: "20px",
                   }}
                 >
                   <GradeList />
