@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
 importScripts(
-  "/grades-app-reactjs-mui/precache-manifest.e1f338c7600fd2dec3d2255c5c83bd71.js"
+  "/grades-app-reactjs-mui/precache-manifest.c1efdb6c976b08a2341a2b2cce1fb1db.js"
 );
 
 workbox.clientsClaim();
