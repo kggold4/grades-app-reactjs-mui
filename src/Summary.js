@@ -15,9 +15,9 @@ export default function Summary() {
 
   return (
     <React.Fragment>
-      <Title>Summary</Title>
+      <Title>Statistics</Title>
       <TableContainer component={Paper}>
-        <Table sx={{ maxWidth: 250 }} aria-label="simple table">
+        <Table sx={{ maxWidth: 275 }} aria-label="simple table">
           <TableHead>
             <TableRow>
               <TableCell>Grades Average</TableCell>
@@ -36,7 +36,7 @@ export default function Summary() {
             ))}
           </TableBody>
         </Table>
-        <Table sx={{ maxWidth: 250 }} aria-label="simple table">
+        <Table sx={{ maxWidth: 275 }} aria-label="simple table">
           <TableHead>
             <TableRow>
               <TableCell>Highest Grade</TableCell>

@@ -146,3 +146,34 @@ class GradeItem {
     this.credits = credits;
   }
 }
+
+export function saveToCsvFile() {
+  getCurrentGradeList();
+  let rows = [["Id", "Course Name", "Grade", "Credits"]];
+  for (const gradeItem of gradeItems) {
+    console.log(gradeItem.id);
+    rows.push([
+      gradeItem.id,
+      gradeItem.name,
+      gradeItem.grade,
+      gradeItem.credits,
+    ]);
+  }
+  rows.push([
+    "Grades Average",
+    "Number of Credits",
+    "Highest Grade	",
+    "Lowest Grade",
+  ]);
+  rows.push([getAverage(), getSumCredits(), getMaxGrade(), getMinGrade()]);
+
+  let csvContent = "data:text/csv;charset=utf-8,";
+
+  rows.forEach(function(rowArray) {
+    let row = rowArray.join(",");
+    csvContent += row + "\r\n";
+  });
+
+  var encodedUri = encodeURI(csvContent);
+  window.open(encodedUri);
+}

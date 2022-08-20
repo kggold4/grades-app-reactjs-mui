@@ -5,6 +5,7 @@ import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
 import UploadIcon from "@mui/icons-material/Upload";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
+import { saveToCsvFile } from "./GradesUtils";
 import Title from "./Title";
 
 export default function ImportExport() {
@@ -34,7 +35,7 @@ export default function ImportExport() {
           startIcon={<FileDownloadIcon />}
           sx={{ mt: 3, mb: 2 }}
           onClick={() => {
-            console.log("import");
+            saveToCsvFile();
           }}
         >
           Export
