@@ -9,6 +9,7 @@ import Inset from "./Inset";
 import GradeList from "./GradesList";
 import Header from "./Header";
 import Summary from "./Summary";
+import ImportExport from "./ImportExport";
 import Footer from "./Footer";
 
 const theme = createTheme({
@@ -43,31 +44,45 @@ export default function DashboardContent() {
         >
           <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
             <Grid container spacing={3}>
-              <Grid item xs={6}>
+              <Grid item xs={5}>
                 <Paper
                   sx={{
                     p: 2,
                     display: "flex",
                     flexDirection: "column",
-                    height: 300,
+                    height: 350,
                     padding: "20px",
                   }}
                 >
                   <Inset />
                 </Paper>
               </Grid>
-              <Grid item xs={6}>
+              <Grid item xs={4}>
                 <Paper
                   sx={{
                     p: 2,
                     display: "flex",
                     flexDirection: "column",
-                    height: 300,
+                    height: 350,
                     textAlign: "left",
                     padding: "20px",
                   }}
                 >
                   <Summary />
+                </Paper>
+              </Grid>
+              <Grid item xs={3}>
+                <Paper
+                  sx={{
+                    p: 2,
+                    display: "flex",
+                    flexDirection: "column",
+                    height: 350,
+                    textAlign: "left",
+                    padding: "20px",
+                  }}
+                >
+                  <ImportExport />
                 </Paper>
               </Grid>
               <Grid item xs={12}>
@@ -76,7 +91,6 @@ export default function DashboardContent() {
                     p: 2,
                     display: "flex",
                     flexDirection: "column",
-                    height: 400,
                     padding: "20px",
                   }}
                 >

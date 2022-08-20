@@ -6,7 +6,7 @@ function Title(props) {
   return (
     <Typography
       align="left"
-      paddingLeft="70px"
+      paddingLeft="20px"
       component="h2"
       variant="h6"
       color="primary"

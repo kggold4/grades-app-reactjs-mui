@@ -5,8 +5,11 @@ import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
+import Paper from "@mui/material/Paper";
 import Container from "@mui/material/Container";
 import { addGrade, clearGradesItems } from "./GradesUtils";
+import ClearIcon from "@mui/icons-material/Clear";
+import AddIcon from "@mui/icons-material/Add";
 import Title from "./Title";
 
 export default function Inset() {
@@ -17,7 +20,7 @@ export default function Inset() {
   return (
     <React.Fragment>
       <Title>Add Grades</Title>
-      <Container component="main" maxWidth="xs">
+      <Container component={Paper} maxWidth="xs">
         <CssBaseline />
         <Box noValidate sx={{ mt: 3 }}>
           <Grid container spacing={2}>
@@ -61,6 +64,7 @@ export default function Inset() {
                 type="submit"
                 fullWidth
                 variant="contained"
+                startIcon={<AddIcon />}
                 sx={{ mt: 3, mb: 2 }}
                 onClick={() => {
                   addGrade(name, parseFloat(grade), parseFloat(credits));
@@ -74,6 +78,7 @@ export default function Inset() {
                 type="button"
                 fullWidth
                 variant="outlined"
+                startIcon={<ClearIcon />}
                 sx={{ mt: 3, mb: 2 }}
                 onClick={() => {
                   clearGradesItems();

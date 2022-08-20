@@ -117,6 +117,27 @@ export function getAverage() {
   return (sum / creditCouter).toFixed(2);
 }
 
+export function getStatistics() {
+  let statisticsItem = new StatisticsItem(
+    0,
+    getAverage(),
+    getSumCredits(),
+    getMaxGrade(),
+    getMinGrade()
+  );
+  return [statisticsItem];
+}
+
+class StatisticsItem {
+  constructor(id, average, sumCredits, maxGrade, minGrade) {
+    this.id = id;
+    this.average = average;
+    this.sumCredits = sumCredits;
+    this.maxGrade = maxGrade;
+    this.minGrade = minGrade;
+  }
+}
+
 class GradeItem {
   constructor(id, name, grade, credits) {
     this.id = id;

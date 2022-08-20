@@ -1,46 +1,61 @@
 import * as React from "react";
-import Typography from "@mui/material/Typography";
-import Grid from "@mui/material/Grid";
 import Title from "./Title";
-
-import {
-  getMinGrade,
-  getMaxGrade,
-  getSumCredits,
-  getAverage,
-} from "./GradesUtils";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
+import { getStatistics } from "./GradesUtils";
 
 export default function Summary() {
-  const minGrade = getMinGrade();
-  const maxGrade = getMaxGrade();
-  const sumCredits = getSumCredits();
-  const average = getAverage();
+  const statistics = getStatistics();
+  console.table(statistics);
 
   return (
     <React.Fragment>
       <Title>Summary</Title>
-      <Grid container spacing={2}>
-        <Grid item xs={12} sm={6}>
-          <Typography component="p" variant="h6" paddingBottom={2.5}>
-            Average: {average}
-          </Typography>
-        </Grid>
-        <Grid item xs={3} sm={6}>
-          <Typography color="text.secondary">
-            Number of Credits: {sumCredits}
-          </Typography>
-        </Grid>
-        <Grid item xs={3} sm={6}>
-          <Typography color="text.secondary">
-            Highest Grade: {maxGrade}
-          </Typography>
-        </Grid>
-        <Grid item xs={3} sm={6}>
-          <Typography color="text.secondary">
-            Lowest Grade: {minGrade}
-          </Typography>
-        </Grid>
-      </Grid>
+      <TableContainer component={Paper}>
+        <Table sx={{ maxWidth: 250 }} aria-label="simple table">
+          <TableHead>
+            <TableRow>
+              <TableCell>Grades Average</TableCell>
+              <TableCell>Number of Credits</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {statistics.map((statistics) => (
+              <TableRow
+                key={statistics.id}
+                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+              >
+                <TableCell>{statistics.average}</TableCell>
+                <TableCell>{statistics.sumCredits}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+        <Table sx={{ maxWidth: 250 }} aria-label="simple table">
+          <TableHead>
+            <TableRow>
+              <TableCell>Highest Grade</TableCell>
+              <TableCell>Lowest Grade</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {statistics.map((statistics) => (
+              <TableRow
+                key={statistics.id}
+                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+              >
+                <TableCell>{statistics.maxGrade}</TableCell>
+                <TableCell>{statistics.minGrade}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </React.Fragment>
   );
 }
