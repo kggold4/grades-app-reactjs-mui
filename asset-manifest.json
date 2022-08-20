@@ -1,7 +1,7 @@
 {
   "main.css": "/grades-app-reactjs-mui/static/css/main.f8e1e073.chunk.css",
-  "main.js": "/grades-app-reactjs-mui/static/js/main.950e4087.chunk.js",
-  "main.js.map": "/grades-app-reactjs-mui/static/js/main.950e4087.chunk.js.map",
+  "main.js": "/grades-app-reactjs-mui/static/js/main.d08a2ab1.chunk.js",
+  "main.js.map": "/grades-app-reactjs-mui/static/js/main.d08a2ab1.chunk.js.map",
   "static/js/1.f25715d3.chunk.js": "/grades-app-reactjs-mui/static/js/1.f25715d3.chunk.js",
   "static/js/1.f25715d3.chunk.js.map": "/grades-app-reactjs-mui/static/js/1.f25715d3.chunk.js.map",
   "static/js/2.29274593.chunk.js": "/grades-app-reactjs-mui/static/js/2.29274593.chunk.js",
@@ -10,6 +10,6 @@
   "runtime~main.js.map": "/grades-app-reactjs-mui/static/js/runtime~main.c262914d.js.map",
   "static/css/main.f8e1e073.chunk.css.map": "/grades-app-reactjs-mui/static/css/main.f8e1e073.chunk.css.map",
   "index.html": "/grades-app-reactjs-mui/index.html",
-  "precache-manifest.c1efdb6c976b08a2341a2b2cce1fb1db.js": "/grades-app-reactjs-mui/precache-manifest.c1efdb6c976b08a2341a2b2cce1fb1db.js",
+  "precache-manifest.eaedf4c045efbdb0175ae8ba2ebb21e9.js": "/grades-app-reactjs-mui/precache-manifest.eaedf4c045efbdb0175ae8ba2ebb21e9.js",
   "service-worker.js": "/grades-app-reactjs-mui/service-worker.js"
 }

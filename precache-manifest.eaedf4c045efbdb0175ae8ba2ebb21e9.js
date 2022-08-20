@@ -1,11 +1,11 @@
 self.__precacheManifest = [
   {
-    "revision": "950e40876cbab61099d8",
+    "revision": "d08a2ab1385bc30ce7ef",
     "url": "/grades-app-reactjs-mui/static/css/main.f8e1e073.chunk.css"
   },
   {
-    "revision": "950e40876cbab61099d8",
-    "url": "/grades-app-reactjs-mui/static/js/main.950e4087.chunk.js"
+    "revision": "d08a2ab1385bc30ce7ef",
+    "url": "/grades-app-reactjs-mui/static/js/main.d08a2ab1.chunk.js"
   },
   {
     "revision": "f25715d373fbbf304af5",
@@ -20,7 +20,7 @@ self.__precacheManifest = [
     "url": "/grades-app-reactjs-mui/static/js/runtime~main.c262914d.js"
   },
   {
-    "revision": "527799ab18b2c6d155d15de62045dc31",
+    "revision": "431a0466053dd95125c88da68f89f10b",
     "url": "/grades-app-reactjs-mui/index.html"
   }
 ];
