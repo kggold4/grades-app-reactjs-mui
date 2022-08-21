@@ -9,7 +9,7 @@ import Inset from "./Inset";
 import GradeList from "./GradesList";
 import Header from "./Header";
 import Summary from "./Summary";
-import ImportExport from "./ImportExport";
+import More from "./More";
 import Footer from "./Footer";
 
 const theme = createTheme({
@@ -82,7 +82,7 @@ export default function DashboardContent() {
                     padding: "20px",
                   }}
                 >
-                  <ImportExport />
+                  <More />
                 </Paper>
               </Grid>
               <Grid item xs={12}>
