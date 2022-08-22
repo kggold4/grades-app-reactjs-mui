@@ -20,7 +20,7 @@ self.__precacheManifest = [
     "url": "/grades-app-reactjs-mui/static/js/runtime~main.59de20e9.js"
   },
   {
-    "revision": "8697fb47830afd1c2773fe0355c3c0cc",
+    "revision": "ff07a7d7128da3d050ee8464586e2727",
     "url": "/grades-app-reactjs-mui/index.html"
   }
 ];
