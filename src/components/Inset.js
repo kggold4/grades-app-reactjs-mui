@@ -53,7 +53,7 @@ export default function Inset() {
                 required
                 fullWidth
                 id="courseName"
-                label="course Name"
+                label="Course Name"
                 name="courseName"
               />
             </Grid>
