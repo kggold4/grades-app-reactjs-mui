@@ -11,8 +11,6 @@ import { getStatistics } from "./GradesUtils";
 
 export default function Summary() {
   const statistics = getStatistics();
-  console.table(statistics);
-
   return (
     <React.Fragment>
       <Title>Statistics</Title>

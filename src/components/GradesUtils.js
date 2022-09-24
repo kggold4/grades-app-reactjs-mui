@@ -108,7 +108,6 @@ export function getAverage() {
   }
   let sum = 0;
   let creditCouter = 0;
-  console.table(gradeItems);
   for (var i = 0; i < gradeItems.length; i++) {
     sum += gradeItems[i].grade * gradeItems[i].credits;
     creditCouter += gradeItems[i].credits;
@@ -171,10 +170,9 @@ export function saveToCsvFile() {
   window.open(encodedUri);
 }
 
-const csvFileToArray = (string) => {
+const csvFileToObjectArray = (string) => {
   const csvHeader = string.slice(0, string.indexOf("\n")).split(",");
   const csvRows = string.slice(string.indexOf("\n") + 1).split("\n");
-
   const array = csvRows.map((i) => {
     const values = i.split(",");
     const obj = csvHeader.reduce((object, header, index) => {
@@ -183,11 +181,11 @@ const csvFileToArray = (string) => {
     }, {});
     return obj;
   });
-
   return array;
 };
 
 export function setGradesFromFile(data) {
-  const array = csvFileToArray(data);
-  console.table(array);
+  const objects_array = csvFileToObjectArray(data);
+  console.table(objects_array);
+  console.log(objects_array);
 }
