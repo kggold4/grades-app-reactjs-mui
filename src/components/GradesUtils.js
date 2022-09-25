@@ -61,6 +61,18 @@ export function deleteGrade(id) {
   reloadGradeList();
 }
 
+export function validName(name) {
+  return name != "";
+}
+
+export function validGrade(grade) {
+  return grade >= 0 && grade <= 100;
+}
+
+export function validCredits(credits) {
+  return credits >= 0;
+}
+
 export function getMinGrade() {
   getCurrentGradeList();
   if (gradeItems.length === 0) {
@@ -151,6 +163,7 @@ export function saveToCsvFile() {
   for (const gradeItem of gradeItems) {
     rows.push([gradeItem.name, gradeItem.grade, gradeItem.credits]);
   }
+  rows.push([]); // add empty line
   rows.push([
     "Grades Average",
     "Number of Credits",
@@ -163,7 +176,7 @@ export function saveToCsvFile() {
 
   rows.forEach(function(rowArray) {
     let row = rowArray.join(",");
-    csvContent += row + "\r\n";
+    csvContent += row + "\n";
   });
 
   var encodedUri = encodeURI(csvContent);
@@ -181,11 +194,23 @@ const csvFileToObjectArray = (string) => {
     }, {});
     return obj;
   });
-  return array;
+
+  let result = [];
+  for(var row_grade of array) {
+    if(row_grade['Course Name'] === '') {
+      break;
+    } else {
+      result.push(row_grade);
+    }
+  }
+  return result;
 };
 
 export function setGradesFromFile(data) {
   const objects_array = csvFileToObjectArray(data);
+  for(var grade of objects_array) {
+    addGrade(grade['Course Name'], parseFloat(grade['Grade']), parseFloat(grade['Credits']));
+  }
   console.table(objects_array);
-  console.log(objects_array);
+  // console.log(objects_array);
 }

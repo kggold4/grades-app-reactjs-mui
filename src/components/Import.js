@@ -37,6 +37,7 @@ export default function Import() {
         setGradesFromFile(csvOutput);
       };
       fileReader.readAsText(file);
+      handleOnDeleteUploadedFile(e);
     }
   };
 
