@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useState, useEffect } from "react";
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
@@ -24,7 +25,17 @@ const theme = createTheme({
   },
 });
 
-export default function DashboardContent() {
+const DashboardContent = () => {
+
+  const [gradeList, setGradesList] = useState([]);
+
+  // TODO: - Use a function from utils that update gradeList from local storage
+
+  useEffect(() => {
+    // TODO: Add here local storage set item - gradeList
+    console.table(`UseEffect: ${gradeList}`);
+  });
+
   return (
     <ThemeProvider theme={theme}>
       <Box sx={{ display: "flex" }}>
@@ -105,3 +116,5 @@ export default function DashboardContent() {
     </ThemeProvider>
   );
 }
+
+export default DashboardContent;

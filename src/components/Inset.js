@@ -26,7 +26,7 @@ function validInputs(name, grade, credits) {
   }
 }
 
-export default function Inset() {
+const Inset = () => {
   const [name, setName] = useState(" ");
   const [grade, setGrade] = useState(0);
   const [credits, setCredits] = useState(1);
@@ -124,3 +124,5 @@ export default function Inset() {
     </React.Fragment>
   );
 }
+
+export default Inset;
